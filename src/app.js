@@ -4,15 +4,17 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
 const cors = require("cors");
+const serverless = require("serverless-http");
 
 const app = express();
+const router = express.Router();
 
 app.use(cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/', (req, res) => {
+app.get('/ts', (req, res) => {
     res.send('Hello, it"s working');
 })
 
@@ -44,6 +46,8 @@ app.post('/api/form', (req, res) => {
     })
 });
 
+app.use('/.netlify/functions/api', router);
+
 
 const PORT = process.env.PORT || 3001;
 
@@ -52,3 +56,5 @@ const PORT = process.env.PORT || 3001;
 app.listen(PORT, (req, res) => {
     console.log('Running on local server!!');
 });
+
+module.exports.handler = serverless(app);
